@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <h:form class="p-p-5">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <h1>Comprobantes de retención</h1>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-formgroup-inline">
+                                <div class="p-field">
+                                    <p:inputText placeholder="Buscar" type="text"/>
+                                </div>
+                                <p:button value="Buscar" styleClass="ui-button-raised ui-button-warning"/>
+                                <p:button value="Insertar" styleClass="ui-button-raised ui-button-success" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <p:dataTable var="retencion" value="#{comprobanteMB.retenciones}" size="small">
+                        <p:headerRow field="estado_retencion" expandable="true">
+                            <p:column colspan="6">
+                                <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
+                                    <h:outputText styleClass="p-ml-2" value="#{retencion.estado_retencion}"/> 
+                                </div>
+                            </p:column>    
+                        </p:headerRow>
+
+                        <p:column headerText="N. Retencion">
+                            <h:outputText value="#{retencion.n_comprobante_retencion}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{retencion.estado_retencion}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Razón social">
+                            <h:outputText value="RUC #{retencion.factura.proveedor.ruc} -- #{retencion.factura.proveedor.razonSocial}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{retencion.fecha_emision}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Total">
+                            <h:outputText value="#{retencion.total}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Acciones">
+                            <h:outputText value="Acciones"></h:outputText>
+                        </p:column>
+
+                        <p:summaryRow>
+                            <p:column colspan="5" style="text-align:right">
+                                <h:outputText value="Total de comprobantes:"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{comprobanteMB.getCountRegister(retencion.estado_retencion)}"/>
+                            </p:column>
+                        </p:summaryRow>
+                        
+                    </p:dataTable>
+
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

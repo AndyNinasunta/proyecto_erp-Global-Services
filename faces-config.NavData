@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="View/contabilidad/balanceGeneral.xhtml" x="361" y="102" zoom="true"/>
+        <Node id="View/contabilidad/libroMayor.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="View/contabilidad/agregarCuenta.xhtml" x="482" y="307" zoom="true"/>
+        <Node id="View/contabilidad/diarios.xhtml" x="40" y="369" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Pagos.xhtml" x="34" y="235" zoom="true"/>
+        <Node id="View/contabilidad/pcSubgrupos.xhtml" x="405" y="43" zoom="true"/>
+        <Node id="View/contabilidad/dialogAgregarSubGrupo.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="View/contabilidad/asientos.xhtml" x="869" y="89" zoom="true"/>
+        <Node id="index.xhtml" x="385" y="158" zoom="true"/>
+        <Node id="View/contabilidad/pcGrupos.xhtml" x="391" y="538" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Proveedor.xhtml" x="69" y="489" zoom="true"/>
+        <Node id="Plantilla/Plantilla.xhtml" x="85" y="541" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Comprobante.xhtml" x="42" y="300" zoom="true"/>
+        <Node id="View/contabilidad/gananciasPerdidas.xhtml" x="397" y="238" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Factura.xhtml" x="873" y="136" zoom="true"/>
+        <Node id="View/contabilidad/dialogAgregarGrupo.xhtml" x="682" y="401" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/AutorizacionPago.xhtml" x="46" y="423" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Pago.xhtml" x="64" y="40" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Anticipo.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="View/contabilidad/dialogAgregarCuenta.xhtml" x="72" y="590" zoom="true"/>
+        <Node id="View/contabilidad/home.xhtml" x="42" y="104" zoom="true"/>
+        <Node id="View/contabilidad/pcCuentas.xhtml" x="20" y="166" zoom="true"/>
+        <Node id="View/cuentas_por_pagar/Calendario.xhtml" x="565" y="469" zoom="true"/>
+        <Node id="View/contabilidad/planCuentas.xhtml" x="872" y="194" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

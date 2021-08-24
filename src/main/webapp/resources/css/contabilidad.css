@@ -1,0 +1,46 @@
+.icons-title {
+    padding: 7px 3px 0px 3px;
+    margin-right:9px;
+    border-radius: 6px;
+    font-size: 21px;
+    color: #fff;
+}
+
+.money {
+    float: right;
+}
+
+.grupo {
+    border-style: none none double;
+    font-weight: bold;
+}
+
+.grupo > td:nth-last-child(n) {
+    padding-top: 30px;
+}
+
+.linea {
+    border-bottom: 1px solid;
+}
+
+.spinner {
+    position: fixed;
+    z-index: 3;
+    border: 9px solid #fff;
+    border-left-color: #09f;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

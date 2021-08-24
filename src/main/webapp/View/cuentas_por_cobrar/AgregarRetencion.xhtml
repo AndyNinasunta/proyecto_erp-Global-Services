@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <div class="titleView">
+                    <h4>AGREGAR RETENCIONES</h4>
+                </div>
+                <p:panel>
+                    <p:growl id="growl" widgetVar="growl" showDetail="true" life="1500"/> 
+                    <h:form id="frmprincipal">
+                        <div class="ui-grid-row" style="height: 135px; padding-left: 100px;">
+                            <div>
+                                <div style="float: left;">
+                                    <p:outputLabel for="identificacionCliente"
+                                                   value="Identificación: "
+                                                   style="font-weight:bold;"/>
+                                    <br/> <br/>
+                                    <p:inputText id="identificacionCliente" 
+                                                 placeholder="CI/PA/RUC"
+                                                 maxlength="13"
+                                                 value="#{retencionController.identificacion}"
+                                                 style="width: 150px;"/>
+                                    &nbsp;&nbsp;
+                                    <div style="float: right;">
+                                        <p:commandButton id="btnconsulta" icon="pi pi-replay" 
+                                                         styleClass="rounded-button ui-button-secondary"
+                                                         update=":growl optionFactura"
+                                                         actionListener="#{retencionController.cargarFacturas()}"/>
+                                    </div>
+                                </div>
+                                <div id="divFactura">
+                                    <p:outputLabel value="N° Factura: " 
+                                                   for="optionFactura"
+                                                   style="font-weight:bold;" />
+                                    <br/> <br/>
+                                    <p:selectOneMenu id="optionFactura" 
+                                                     value="#{retencionController.idFactura}"
+                                                     style="height: 40px; width: 185px !important;"
+                                                      filter="true" filterMatchMode="startsWith">                            
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="-1"/>
+                                        <f:selectItems value="#{retencionController.listaVentas}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="divFactura">
+                                    <p:outputLabel value="Fecha Emisión: " for="fechaEmision" 
+                                                   style="font-weight:bold;"/>
+                                    <br/> <br/> 
+                                    <p:inputText id="fechaEmision" 
+                                                 readonly="true"
+                                                 value="#{retencionController.retencion.fechaEmision}"
+                                                 style="height: 40px; width: 130px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <p:toolbarGroup>
+                                <div>
+                                    <h:form>
+                                        <p:commandButton icon="pi pi-replay " 
+                                                         value="Cargar Retención" 
+                                                         ajax="false"
+                                                         actionListener="#{retencionController.cargarRetenciones()}"
+                                                         styleClass=" ui-button-secondary" 
+                                                         update=":growl dialogAddRetencion"
+                                                         style="margin:.3rem;"/>
+                                        &nbsp;&nbsp;
+                                        <p:commandButton icon="pi pi-plus " 
+                                                         value="Añadir Nueva Retención" 
+                                                         oncomplete="PF('RetencionNew').show();"
+                                                         actionListener="#{retencionController.nuevaRetencion()}"
+                                                         styleClass=" ui-button-success" 
+                                                         style="margin:.3rem;"/>
+                                    </h:form>
+                                </div>
+                            </p:toolbarGroup>
+                        </div>
+                        <br/>
+
+                        <p:dataTable id="tblRetenciones" var="varRetenciones" 
+                                     value="#{retencionController.listaRetenciones}"
+                                     rowKey="#{varRetenciones.idRetencion}"
+                                     style="font-size: 14px;"
+                                     paginator="true" rows="5" rowSelectMode="add"
+                                     paginatorPosition="bottom" > 
+                            <p:column headerText="Ejercicio Fiscal" 
+                                      style="text-align: center;">
+                                <h:outputText value="#{varRetenciones.ejerFiscal}" />
+                            </p:column>
+                            <p:column headerText="Base Imponible" 
+                                      style="text-align: center;">
+                                <h:outputText value="#{varRetenciones.baseImponible}">
+                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Descripción Impuesto" 
+                                      style="text-align: center;">
+                                <h:outputText value="#{varRetenciones.descImpuesto}" />
+                            </p:column>
+                            <p:column headerText="% Retención" 
+                                      style="text-align: center;">
+                                <p>#{varRetenciones.porcenRetencion}%</p>
+                            </p:column>
+                            <p:column headerText="Valor Retenido" 
+                                      style="text-align: center;">
+                                <h:outputText value="#{varRetenciones.valorRetenido}">
+                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="tamanoColumnActions"
+                                      style="text-align: center;" 
+                                      headerText="Acciones">
+                                <p:commandButton actionListener="#{retencionController.CargarDatos(varRetenciones)}"
+                                                 class="tamanoButtonActions"
+                                                 update=":dialogEditarRetencion"
+                                                 oncomplete="PF('RetencionEdit').show()" 
+                                                 icon="pi pi-pencil"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!-- Ventana Agregar datos de la retencion!-->
+                    <p:dialog header="Nueva Retención" minHeight="50" 
+                              height="auto" width="800px" showEffect="fade"
+                              modal="true" widgetVar="RetencionNew"
+                              id="dialogAddRetencion" responsive="true">
+                        <h:form>
+                            <p:panelGrid columns="4" layout="grid">
+                                <p:outputLabel for="baseImponibleAdd" 
+                                               style="font-weight: bold;"
+                                               value="Base Imponible:">
+                                </p:outputLabel>
+                                <p:inputText id="baseImponibleAdd"
+                                             type="text" 
+                                             style="width: 80px;"
+                                             required="true"
+                                             value="#{retencionController.retencion.baseImponible}">
+                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="descrImpuestoAdd" 
+                                               style="font-weight: bold;"
+                                               value="Descripción Impuesto:">
+                                </p:outputLabel>
+                                <p:selectOneMenu id="descrImpuestoAdd" 
+                                                 value="#{retencionController.retencion.descImpuesto}" 
+                                                 style="width: 150px !important;"
+                                                 required="true">                            
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                    <f:selectItem itemLabel="BIENES" 
+                                                  itemValue="BIENES"/>
+                                    <f:selectItem itemLabel="SERVICIOS" 
+                                                  itemValue="SERVICIOS"/>
+                                    <f:selectItem itemLabel="CONT.CONS"  
+                                                  itemValue="CONTRATOS DE CONSTRUCCION"/>
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+                            <br/>
+                            <div style="float: right;">
+                                <p:commandButton icon="pi pi-times" value="Cancelar"
+                                                 immediate="true"
+                                                 oncomplete="PF('RetencionNew').hide()"
+                                                 class="ui-button-secondary"
+                                                 styleClass=" ui-button-danger"/> 
+                                &nbsp; 
+                                <p:commandButton actionListener="#{retencionController.registrarRetencion()}"
+                                                 icon="pi pi-save" value="Guardar"
+                                                 ajax="true"
+                                                 update=":growl :frmprincipal:tblRetenciones"
+                                                 styleClass=" ui-button-success"/> 
+                            </div>
+                        </h:form>
+                    </p:dialog>
+
+                    <!-- Ventana Editar datos de la retencion!-->
+                    <p:dialog header="Editar Retención" minHeight="50"
+                              height="auto" width="750px" showEffect="fade"
+                              modal="true" widgetVar="RetencionEdit"
+                              id="dialogEditarRetencion">
+                        <h:form>
+                            <p:panelGrid columns="4" layout="grid">
+                                <p:outputLabel for="baseImponibleEdit" 
+                                               style="font-weight: bold;"
+                                               value="Base Imponible:">
+                                </p:outputLabel>
+                                <p:inputText id="baseImponibleEdit"
+                                             type="text" 
+                                             style="width: 80px;"
+                                             required="true"
+                                             value="#{retencionController.retencion.baseImponible}">
+                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="descrImpuestoEdit" 
+                                               style="font-weight: bold;"
+                                               value="Descripción Impuesto:">
+                                </p:outputLabel>
+                                <p:selectOneMenu id="descrImpuestoEdit" 
+                                                 value="#{retencionController.retencion.descImpuesto}" 
+                                                 style="width: 150px !important;"
+                                                 required="true">                            
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                                    <f:selectItem itemLabel="BIENES" 
+                                                  itemValue="BIENES"/>
+                                    <f:selectItem itemLabel="SERVICIOS" 
+                                                  itemValue="SERVICIOS"/>
+                                    <f:selectItem itemLabel="CONTR.CONS" 
+                                                  itemValue="CONTRATOS DE CONSTRUCCION"/>
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+                            <br/>
+                            <div style="float: right;">
+                                <p:commandButton icon="pi pi-times" value="Cancelar"
+                                                 immediate="true"
+                                                 oncomplete="PF('RetencionEdit').hide()"
+                                                 class="ui-button-secondary"
+                                                 styleClass=" ui-button-danger"/> 
+                                &nbsp;
+                                <p:commandButton actionListener="#{retencionController.actualizarRetencion()}"
+                                                 icon="pi pi-save"
+                                                 ajax="false"
+                                                 value="Guardar Cambios"
+                                                 update=":growl :frmprincipal:tblRetenciones"
+                                                 styleClass=" ui-button-success"/> 
+                            </div>
+                        </h:form>
+                    </p:dialog>
+
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

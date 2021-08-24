@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <div class="titleView">
+                    <h4>REGISTRO NUEVO COBRO</h4>
+                </div>
+                <p:panel>
+                    <div class="card">
+                        <p:growl id="growl" widgetVar="growl" showDetail="true" life="2000"/> 
+                        <h:form id="form">
+                            <div class="ui-grid-row" style="height: 135px;">
+                                <div>
+                                    <div style="float: left; padding-left: 50px;">
+                                        <p:outputLabel for="identificacionCliente"
+                                                       value="Identificación: "
+                                                       style="font-weight:bold;"/>
+                                        <br/> <br/>
+                                        <p:inputText id="identificacionCliente" 
+                                                     placeholder="CI/PA/RUC"
+                                                     value="#{abonoController.identificacion}"
+                                                     maxlength="13"
+                                                     style="width: 150px;" />
+                                        &nbsp;&nbsp;&nbsp;
+                                        <div style="float: right;">
+                                            <p:commandButton id="btnconsulta" icon="pi pi-replay" 
+                                                             styleClass="rounded-button ui-button-secondary"
+                                                             update=":growl optionFactura nombreCliente fechaVencida fechaEmision"
+                                                             actionListener="#{abonoController.cargarFacturas()}"/>
+                                        </div>
+                                    </div>
+                                    <div style="float: left; padding-left: 50px;">
+                                        <p:outputLabel value="N° Factura: " 
+                                                       for="optionFactura"
+                                                       style="font-weight:bold;" />
+                                        <br/> <br/>
+                                        <p:selectOneMenu id="optionFactura" 
+                                                         value="#{abonoController.idFactura}"
+                                                         style="height: 40px; width: 185px !important;"
+                                                          filter="true" filterMatchMode="startsWith">                            
+                                            <f:selectItem itemLabel="Seleccione..." itemValue="0"/>
+                                            <f:selectItems value="#{abonoController.listaVenta}"
+                                                           itemLabel="#{abonoController.listaVenta}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="float: left; padding-top: 30px; padding-left: 100px;">
+                                        <p:outputLabel value="Nombre Cliente: " 
+                                                       for="nombreCliente" 
+                                                       style="font-weight:bold;"/>
+                                        <br/><br/>
+                                        <p:inputText id="nombreCliente" 
+                                                     disabled="true" 
+                                                     placeholder="Razón Social/Nombres y Apellidos"
+                                                     value="#{abonoController.persona.razonNombre}"
+                                                     class="inputListaCobros"/> 
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div style="float: left; padding-left: 50px;">
+                                        <p:outputLabel value="Fecha Crédito: " 
+                                                       for="fechaEmision" 
+                                                       style="font-weight:bold;"/>
+                                        <br/> <br/> 
+                                        <p:inputText id="fechaEmision" 
+                                                     disabled="true" 
+                                                     placeholder="aaaa/mm/dd"
+                                                     value="#{abonoController.fechasPlan[0]}"/> 
+                                    </div>
+                                    <div style="float: left; padding-left: 73px;">
+                                        <p:outputLabel value="Fecha Vencida: " 
+                                                       for="fechaVencida" 
+                                                       style="font-weight:bold;"/>
+                                        <br/> <br/> 
+                                        <p:inputText id="fechaVencida" 
+                                                     disabled="true" 
+                                                     placeholder="aaaa/mm/dd"
+                                                     value="#{abonoController.fechasPlan[1]}"/> 
+                                    </div>
+                                    <div style="float: left; padding-top: 40px; padding-left: 35px;">
+                                        <p:commandButton value="Cargar Deuda"
+                                                         id="btnDeuda"
+                                                         icon="pi pi-replay" 
+                                                         actionListener="#{abonoController.cargarDeuda()}"
+                                                         update="growl fechaVencida fechaEmision tblRegistroCobro"
+                                                         styleClass="ui-button-secondary"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/><br/><br/><br/>
+                            <p:dataTable id="tblRegistroCobro" var="varRegistroCobro"
+                                         emptyMessage="No existen Registros." 
+                                         scrollable="true" paginator="true" 
+                                         value="#{abonoController.list_Abonos}"
+                                         rows="5" rowSelectMode="add"
+                                         paginatorPosition="bottom" 
+                                         style="font-size: 14px;">
+                                <f:facet name="header">
+                                    <div>
+                                        <span style="float: right;">
+                                            <p:outputLabel value="Total Abonos: " 
+                                                           for="totalAbono" 
+                                                           style="font-weight:bold;"/>
+                                            &nbsp;&nbsp;
+                                            <p:inputText id="totalAbono" 
+                                                         disabled="true" 
+                                                         value="#{abonoController.totalAbonos}"
+                                                         style="width: 100px; text-align: right;">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </p:inputText>
+                                        </span>
+                                        <span style="float: right; padding-right: 20px;">
+                                            <p:outputLabel value="Valor Pendiente: " 
+                                                           for="valorPendiente" 
+                                                           style="font-weight:bold;"/>
+                                            &nbsp;&nbsp;
+                                            <p:inputText id="valorPendiente" 
+                                                         disabled="true" 
+                                                         type="text"
+                                                         value="#{abonoController.totalPendiente}"
+                                                         style="width: 100px; text-align: right;">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </p:inputText>
+                                        </span>
+                                        <br/><br/>
+                                    </div>
+                                </f:facet>
+                                <p:column class="tamanoInput" 
+                                          style="text-align: center;"
+                                          headerText="Documento">
+                                    <h:outputText value="FACTURA" />
+                                </p:column>
+                                <p:column class="tamanoInput" 
+                                          style="text-align: center;"
+                                          headerText="N° Fact">
+                                    <h:outputText value="#{varRegistroCobro.numFactura}" />
+                                </p:column>
+                                <p:column class="tamanoInput" 
+                                          style="text-align: center;"
+                                          headerText="Fecha de Abono">
+                                    <h:outputText value="#{varRegistroCobro.fechaAbono}" />
+                                </p:column>
+                                <p:column class="tamanoInput" 
+                                          style="text-align: center;"
+                                          headerText="Forma de Pago">
+                                    <h:outputText value="#{varRegistroCobro.descrFormaPago}" />
+                                </p:column>
+                                <p:column class="tamanoInput" 
+                                          style="text-align: center;"
+                                          headerText="Monto">
+                                    <h:outputText value="#{varRegistroCobro.valorAbonado}" >
+                                        <f:convertNumber type="currency" 
+                                                         currencySymbol="$"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            <br/>
+                            <div style="text-align: center;"> 
+                                <p:commandButton value="Nuevo Cobro"
+                                                 ajax="false"
+                                                 actionListener="#{abonoController.nuevoAbono}"
+                                                 icon="pi pi-save" 
+                                                 styleClass="ui-button-success"/>
+                            </div>
+                        </h:form>
+
+                        <!-- Ventana Agregar un Nuevo Cobro!-->
+                        <p:dialog header="Registrar Nuevo Cobro" minHeight="50"
+                                  height="auto" width="750px" showEffect="fade"
+                                  modal="true" widgetVar="nuevoCobro"
+                                  id="dialogAddCobro" responsive="true">
+                            <h:form>
+                                <p:panelGrid columns="4" layout="grid">
+                                    <p:outputLabel for="abono" 
+                                                   style="font-weight: bold;"
+                                                   value="Saldo Abonar:">
+                                    </p:outputLabel>
+                                    <p:inputText id="abono"  
+                                                 required="true"
+                                                 value="#{abonoController.abono.valorAbonado}"
+                                                 style="width: 100px !important;">
+                                        <p:keyFilter mask="num" />
+                                    </p:inputText>
+                                    
+                                    <p:outputLabel for="formaPago" 
+                                                   style="font-weight: bold;"
+                                                   value="Forma de Pago:">
+                                    </p:outputLabel>
+                                    <p:selectOneMenu id="formaPago" 
+                                                     style="width: 170px !important;"
+                                                     value="#{abonoController.abono.idFormaDePago}"
+                                                     required="true">                            
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="-1"/>
+                                        <f:selectItem itemLabel="Efectivo" itemValue="2"/>
+                                        <f:selectItem itemLabel="Cheque" itemValue="3"/>
+                                        <f:selectItem itemLabel="Tarjeta de Débito" itemValue="4"/>
+                                        <f:selectItem itemLabel="Tarjeta de Crédito" itemValue="5"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="fechaAbono" 
+                                                   style="font-weight: bold;"
+                                                   value="Fecha Abono:">
+                                    </p:outputLabel>
+                                    <p:datePicker monthNavigator="true" yearNavigator="true"
+                                                  id="fechaAbono"
+
+                                                  yearRange="1800:2050"
+                                                  required="true"
+                                                  value="#{abonoController.abono.fechaAbono}"
+                                                  placeholder="aaaa-mm-dd"/>
+                                </p:panelGrid>
+                                <br/>
+                                <div style="float: right;">
+                                    <p:commandButton icon="pi pi-times" value="Cancelar"
+                                                     immediate="true"
+                                                     onclick="PF('nuevoCobro').hide()"
+                                                     styleClass=" ui-button-danger"/> 
+                                    &nbsp;
+                                    <p:commandButton 
+                                        icon="pi pi-save" ajax="true"
+                                        value="Guardar Cobro"
+                                        actionListener="#{abonoController.guardarAbono()}"
+                                        update=":growl"
+                                        styleClass="ui-button-success"/> 
+                                </div>
+                            </h:form>
+                        </p:dialog>
+                    </div>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

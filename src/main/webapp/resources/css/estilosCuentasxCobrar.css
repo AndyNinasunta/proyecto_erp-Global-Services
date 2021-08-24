@@ -1,0 +1,130 @@
+.titleView{
+    font-weight: bold; 
+    background-color: #036fab; 
+    color: white; 
+    text-align: center; 
+    height: 25px;
+}
+
+.tamanoInput{
+    width: 150px;
+}
+
+#identi{
+    text-align: center;
+}
+
+.tamanoInputClienteNJ{
+    width: 180px; 
+    height: 40px;
+}
+
+.tamanoColumnActions{
+    text-align: center; 
+    width: 150px;
+}
+
+.tamanoButtonActions{
+    width: 35px; 
+    height: 40px;
+}
+
+#divFactura{
+    float: left; 
+    padding-left: 150px;
+}
+
+#fechaEmision{
+    text-align: center; 
+    width: 150px; 
+    height: 40px;
+}
+
+#tblRetenciones{
+    font-size: 12px;
+}
+
+#optionFactura{
+    width: 200px; 
+    height: 40px;
+}
+
+#divFechaEmision{
+    height: 133px; 
+    width: 250px;
+    float: left; 
+    padding-left: 100px;
+}
+
+.diasVencidos{
+    color: red; 
+    text-align: center; 
+    width: 100px;
+}
+
+.divListaCobro{
+    border: 3px solid #036fab; 
+    width: 850px; 
+    height: 180px; 
+    margin: auto;
+}
+
+.alinearBotones{
+    padding: 10px; 
+    text-align: right;
+}
+
+.outputListaCobros{
+    font-weight: bold; 
+    padding: 15px;
+}
+
+.inputListaCobros{
+    width: 350px; 
+    background-color: gray;
+}
+
+.success{
+    border-radius: 10px;
+    background-color : greenyellow !important;
+}
+
+.failure{
+    border-radius: 10px;
+    background-color: red !important;
+}
+
+.pendiente{
+    border-radius: 10px;
+    background-color : orange !important;
+    color: white;
+    padding: 5px 5px;
+}
+
+.pagado{
+    border-radius: 10px;
+    background-color : green !important;
+    color: white;
+    padding: 5px 5px;
+}
+
+.vencido{
+    border-radius: 10px;
+    background-color : red !important;
+    color: white;
+    padding: 5px 5px;
+}
+
+.SUCCESS{
+    border-radius: 10px;
+    background-color : green !important;
+    color: white;
+    padding: 5px 5px;
+}
+
+.FAILURE{
+    border-radius: 10px;
+    background-color: red !important;
+    color: white;
+    padding: 5px 5px;
+}

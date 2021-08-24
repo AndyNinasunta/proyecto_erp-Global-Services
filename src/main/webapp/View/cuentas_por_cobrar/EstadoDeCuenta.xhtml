@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <div class="titleView">
+                    <h4>ESTADO DE CUENTA</h4>
+                </div>
+                <br/>
+                <p:panel>
+                    <h:form id="formEstadoCuenta">
+                        <p:dataTable id="tblEstadoDeCuenta" var="varEstadoDeCuenta"
+                                     emptyMessage="No existen Registros." 
+                                     value="#{estado_De_CuentaController.lista_Estado_De_Cuenta}"
+                                     style="font-size: 14px;">
+
+                            <p:column class="tamanoInput" 
+                                      style="text-align: center;"
+                                      headerText="Documento">
+                                <h:outputText value="#{varEstadoDeCuenta.numFactura}" />
+
+                            </p:column>
+                            <p:column class="tamanoInput" 
+                                      style="text-align: center;"
+                                      headerText="Fecha">
+                                <h:outputText value="#{varEstadoDeCuenta.fechacredito}" />
+                            </p:column>
+                            <p:column class="tamanoInput" 
+                                      style="text-align: center;"
+                                      headerText="Cargo">
+                                <h:outputText value="#{varEstadoDeCuenta.totalFactura}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="tamanoInput" 
+                                      style="text-align: center;"
+                                      headerText="Abono">
+                                <h:outputText value="#{varEstadoDeCuenta.totalAbonos}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="tamanoInput" 
+                                      style="text-align: center;"
+                                      headerText="Saldo">
+                                <h:outputText value="#{varEstadoDeCuenta.totalPendientes}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <div class="alinearBotones">  
+                            <p:commandButton id="btnExcel" ajax="false"
+                                             value="EXCEL" icon="pi pi-file-excel"
+                                             style="background: green;">
+                                <p:dataExporter type="xls" 
+                                                target="tblEstadoDeCuenta" 
+                                                fileName="EstadodeCuenta"/>
+                            </p:commandButton>
+                            &nbsp;
+                            <p:commandButton id="btnPdf" ajax="false"
+                                             value="PDF" icon="pi pi-file-pdf"
+                                             style="background: red;">
+                                <p:dataExporter type="pdf" 
+                                                target="tblEstadoDeCuenta" 
+                                                fileName="EstadodeCuenta"
+                                                options="#{estado_De_CuentaController.exportarPDF()}"/>
+                            </p:commandButton>
+                        </div>
+                    </h:form>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <h:outputStylesheet name="css/main.css"/>
+        <h:outputStylesheet name="css/cssLayout.css" />
+        <h:outputStylesheet name="css/default.css"/>
+        <h:outputStylesheet name="css/estilo.css"/>
+        <h:outputStylesheet name="css/estilosCuentasxCobrar.css" />
+        <h:outputStylesheet name="css/primeflex.min.css" />   
+        <h:outputStylesheet name="css/primeflex.min.css.map" />
+        <h:outputStylesheet library="css" name="contabilidad.css"></h:outputStylesheet>
+        <title>Sistema ERP Contable</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"/>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' />
+    </h:head>
+    <h:body>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+        <p:dialog width="0%" widgetVar="statusDialog" modal="true" 
+                  draggable="false" closable="false" resizable="false" showHeader="false">
+            <div class="spinner"></div>
+        </p:dialog>
+        <div>
+            <ui:insert name="top">
+                <div class="navbar-principal p-d-flex p-ai-center" >
+                    <a href="/proyecto_erp">
+                        <h:graphicImage name="images/erpLogo.png"  height="60px" class="p-mr-3"/>
+                    </a>
+                    <h2>ERP CONTABLE</h2> 
+                </div>
+            </ui:insert>
+
+            <div class="p-grid" style="width: 99%">
+                <div class="p-col-12 p-md-12 p-lg-3 p-p-3" >
+                    <ui:insert name="left"> 
+                        <h:form>
+                            <p:panelMenu stateful="true">
+                                <p:submenu label="Contabilidad">
+                                    <p:menuitem value="Inicio" action="/View/contabilidad/home"/>
+                                    <p:menuitem value="Asientos" action="/View/contabilidad/asientos"/>
+                                    <p:menuitem value="Diarios" action="/View/contabilidad/diarios"></p:menuitem>
+                                    <p:submenu label="Plan de Cuentas">
+                                        <p:menuitem value="Grupos" action="/View/contabilidad/pcGrupos"></p:menuitem>
+                                        <p:menuitem value="Subgrupos" action="/View/contabilidad/pcSubgrupos"></p:menuitem>
+                                        <p:menuitem value="Cuentas" action="/View/contabilidad/pcCuentas"></p:menuitem>
+                                        <p:menuitem value="Subcuentas" action="/View/contabilidad/planCuentas" />
+                                    </p:submenu>
+                                    <p:submenu label="Informes">
+                                        <p:menuitem value="Balance General" action="/View/contabilidad/balanceGeneral"></p:menuitem>
+                                        <p:menuitem value="Libro Mayor" action="/View/contabilidad/libroMayor"></p:menuitem>
+                                    </p:submenu>
+                                </p:submenu>
+                                <p:submenu label ="Cuentas por pagar" expanded="true">
+                                    <p:menuitem value="Proveedores"
+                                                icon="pi pi-refresh"
+                                                outcome="/View/cuentas_por_pagar/Proveedor"/>
+                                    <p:menuitem value="Facturas Compra"
+                                                icon="pi pi-file-o"
+                                                outcome="/View/cuentas_por_pagar/Factura"/>
+                                    <p:submenu label="Pagos">
+                                        <p:menuitem value="Autorizar pago"
+                                                    style="display: flex; align-items: center; text-decoration: none;"
+                                                    icon="pi pi-check-square"
+                                                    outcome="/View/cuentas_por_pagar/AutorizacionPago"/>
+                                        <p:menuitem value="Realizar Pago"
+                                                    style="display: flex; align-items: center; text-decoration: none;"
+                                                    icon="pi pi-money-bill"
+                                                    outcome="/View/cuentas_por_pagar/Pago"/>
+                                    </p:submenu>
+
+                                    <p:submenu label="Reportes">
+                                        <p:menuitem value="Generar calendario de pagos"
+                                                    icon="pi pi-file-pdf" 
+                                                    style="display: flex; align-items: center; text-decoration: none;"
+                                                    outcome="/View/cuentas_por_pagar/Calendario"/>
+                                    </p:submenu>
+                                    <p:menuitem value="Anticipos"
+                                                icon="pi pi-file-o"
+                                                outcome="/View/cuentas_por_pagar/Anticipo"/>
+
+                                </p:submenu> 
+                                <p:submenu label ="Activos Fijos" expanded="true">
+                                    <p:menuitem value="Tangibles"
+                                                icon="pi pi-file-o"
+                                                outcome="/View/activos_fijos/ActivosTangibles"/>
+                                    <p:menuitem value="Intangibles"
+                                                icon="pi pi-file-o"
+                                                outcome="/View/activos_fijos/ActivosIntangibles"/>
+                                    <p:menuitem value="Reporte de Periodos"
+                                                icon="pi pi-file-pdf"
+                                                outcome="/View/activos_fijos/Periodos"/>
+
+                                </p:submenu>    
+                                <p:submenu label ="Cuentas por cobrar" expanded="true">
+                                    <p:menuitem value="Mantenimiento de Clientes"
+                                                icon="pi pi-briefcase"
+                                                outcome="/View/cuentas_por_cobrar/MantenimientoCliente.xhtml"/>
+                                    <p:submenu label="Cobranzas" icon="pi pi-dollar">
+                                        <p:menuitem value="Nuevo Cobro"
+                                                    outcome="/View/cuentas_por_cobrar/NuevoRegistroCobro.xhtml"/>
+                                        <p:menuitem value="Listado Cobro"
+                                                    outcome="/View/cuentas_por_cobrar/ListadoCobros.xhtml"/>
+                                    </p:submenu>
+
+                                    <p:submenu label="Retenciones" icon="pi pi-file">
+                                        <p:menuitem value="Aplicar Retención"
+                                                    outcome="/View/cuentas_por_cobrar/AgregarRetencion.xhtml"/>
+                                    </p:submenu>
+
+                                    <p:submenu label="Reportes" icon="pi pi-book">
+                                        <p:menuitem value="Listado de Clientes con/sin deuda"
+                                                    outcome="/View/cuentas_por_cobrar/ListaClienteConSinDeuda.xhtml"/>
+                                        <p:menuitem value="Estado de Cuenta" 
+                                                    outcome="/View/cuentas_por_cobrar/EstadoDeCuenta.xhtml"/>
+                                        <p:menuitem value="Facturas Pendientes" 
+                                                    outcome="/View/cuentas_por_cobrar/FacturasPendientes.xhtml"/>
+                                        <p:menuitem value="Cartera x Edades de Vencimiento" 
+                                                    outcome="/View/cuentas_por_cobrar/CarteraxEdadesDeVencimiento.xhtml"/>
+                                    </p:submenu>
+                                </p:submenu>
+                                <p:submenu label="Ventas" >
+                                    <p:menuitem value="Nueva venta" outcome="/View/ventas/nuevaVenta.xhtml" />
+                                    <p:menuitem value="Nueva proforma" outcome="/View/ventas/nuevaProforma.xhtml" />
+                                </p:submenu>
+                            </p:panelMenu>
+                        </h:form>
+                    </ui:insert>
+                </div>
+
+                <div class="p-col-12 p-md-12 p-lg-9">
+                    <ui:insert name="content"></ui:insert>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

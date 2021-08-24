@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true"/>
+                    <h1 style="text-align: center; color: black">Autorizar Pagos</h1>
+                    <p:dataTable id="dt-facturas" value="#{autorizarPagorMB.listarDatos}" 
+                                 var="factura"  
+                                 reflow="true" rows="5" paginator="true"
+                                 resizableColumns="true" paginatorPosition="bottom">
+
+                        <p:column headerText="N° Factura" 
+                                  style="width:70px">
+                            <h:outputText value="#{factura.nfactura}"/>
+                        </p:column>
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{factura.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Importe"
+                                  style="width:50px">
+                            <h:outputText value="#{factura.importe}"/>
+                        </p:column>
+                        <p:column headerText="Fecha" 
+                                  style="width:90px">
+                            <h:outputText value="#{factura.fecha}"/>
+                        </p:column>
+                        <p:column headerText="Vencimiento" 
+                                  style="width:90px">
+                            <h:outputText value="#{factura.vencimiento}"/>
+                        </p:column>
+                        <p:column headerText="Proveedor" >
+                            <h:outputText value="#{factura.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Acciones">
+                            <p:commandButton icon="pi pi-eye" update=":form:outputvisu"
+                                             oncomplete="PF('eyeFactura').show()"
+                                             styleClass="rounded-button ui-button-secondary ui-button-flat"
+                                             action="#{autorizarPagorMB.cargarDatos(factura)}"
+                                             process="@this">
+                            </p:commandButton>
+                            <p:commandButton class="ui-button-warning rounded-button" 
+                                             icon="pi pi-check-square" update=":form:confirmAut"
+                                             styleClass="rounded-button ui-button-secondary ui-button-flat" 
+                                             process="@this" action="#{autorizarPagorMB.cargarAutor(factura)}"
+                                             oncomplete="PF('AutorizarPago').show()">
+                            </p:commandButton>
+
+                        </p:column>
+
+                    </p:dataTable> 
+
+                    <!-- Dialogo Visualizar-->
+                    <p:dialog  header="Detalle Factura" showEffect="fade" modal="true"
+                               widgetVar="eyeFactura" maximizable="true" height="350"
+                               width="70%" closable="false">
+                        <p:outputPanel id="outputvisu" class="ui-fluid">
+
+                            <!-- CAMPOS DEL DIALOG-->
+                            <div class="p-formgrid p-grid">
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="proveedor">Proveedor: *</p:outputLabel>
+                                    <p:inputText type="button" id="proveedor"
+                                                 value="#{autorizarPagorMB.factura.nombre}" />
+                                </div>
+
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="nfactura">No. Factura:</p:outputLabel>
+                                    <p:inputText id="nfactura" value="#{autorizarPagorMB.factura.nfactura}" required="true"/>
+                                </div>
+                            </div>
+
+                            <div class="p-formgrid p-grid">
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="descripcion" >Descripción:</p:outputLabel>
+                                    <p:inputText id="descripcion" value="#{autorizarPagorMB.factura.descripcion}"/>
+                                </div>
+                            </div>
+
+
+                            <div class="p-formgrid p-grid">
+                                <div class="p-field p-col">
+                                    <p:outputLabel for="importe">Importe:</p:outputLabel>
+                                    <p:spinner id="importe" value="#{autorizarPagorMB.factura.importe}" 
+                                               required="true"/>
+                                </div>
+                                <div class="p-field p-col"/>
+                            </div>
+
+                            <p:fieldset legend="Dias plazo del proveedor: #{autorizarPagorMB.factura.aux}">
+                                <div class="p-formgrid p-grid">
+                                    <div class="p-field p-col">
+                                        <label for="fecha" >Fecha factura:</label>
+                                        <p:inputText value="#{autorizarPagorMB.factura.fecha}"/>
+                                    </div>
+
+                                    <div class="p-field p-col">
+                                        <label for="visuVencimiento">Vencimiento:</label>
+                                        <p:inputText value="#{autorizarPagorMB.factura.vencimiento}"/>
+                                    </div>
+                                </div>
+                            </p:fieldset>
+
+                            <!-- FINAL CAMPOS DEL DIALOG-->
+
+                            <!-- TABLA DE DIALOG 1-->
+                            <p:dataTable id="dt-detalle"  
+                                         var="detalle" value="#{autorizarPagorMB.detalleDatos}"
+                                         editable="true" class="p-mt-3">
+                                <f:facet name="header">
+                                    <div class="p-d-flex p-jc-between p-ai-center">
+                                        <span style="font-weight: bold">DETALLE</span>
+                                    </div>
+                                </f:facet>
+
+                                <p:column headerText="Importe">
+                                    <h:outputText value="#{detalle.importeD}"/>
+                                </p:column>
+
+                                <p:column headerText="Detalle">
+                                    <h:outputText value="#{detalle.detalle}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('eyeFactura').hide()"
+                                             class="ui-button-secondary" process="@this"
+                                             actionListener="#{autorizarPagorMB.reset()}"/>
+                        </f:facet>
+                    </p:dialog>
+
+                    <p:confirmDialog id="confirmAut" widgetVar="AutorizarPago" showEffect="fade" width="300"
+                                     message="Desea autorizar el pago de la factura ##{autorizarPagorMB.factura.nfactura}?" header="Confirmar" severity="warn">
+                            <p:inputText value="#{autorizarPagorMB.factura.nfactura}" type="hidden"/>
+
+                            <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{autorizarPagorMB.autorizarPago}"
+                                             process="confirmAut @this" oncomplete="PF('AutorizarPago').hide()"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                             onclick="PF('AutorizarPago').hide()"/>
+                    </p:confirmDialog> 
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

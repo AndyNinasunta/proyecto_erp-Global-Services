@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="Guardar" icon="pi pi-download" styleClass="ui-button-primary p-mr-2">
+                                <p:dataExporter preProcessor="#{libroManagedBean.preProcessPDF}" options="#{libroManagedBean.pdfOpt}" type="pdf" target="dt-libros" fileName="LibroMayor-#{libroManagedBean.dateNow}"/>
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right" style="width: 27%;">
+                            <p:selectOneMenu style="width: 100%;" id="labeled" value="#{libroManagedBean.onSelectedDiario.idDiario}" label="Seleccione un diario" editable="false">
+                                <f:selectItem itemLabel="Seleccione un Diario Contable" itemValue="0" noSelectionOption="true"/>
+                                <p:ajax listener="#{libroManagedBean.filtrateLibroMayor()}" update=":form:dt-libros"/>
+                                <f:selectItems value="#{libroManagedBean.diarios}" var="diario"
+                                               itemLabel="#{diario.nombre}" itemValue="#{diario.idDiario}"/>
+                            </p:selectOneMenu>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <div class="card p-2">
+                        <p:dataTable id="dt-libros" widgetVar="dtLibros" var="libro"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                     value="#{libroManagedBean.libros}" sortBy="#{libro.codigo}">
+
+                            <f:facet name="header">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 style="font-weight: bold;">Nombre de la Empresa</h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h:outputText value="#{libroManagedBean.dateNow}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </div>
+                                </div>
+                            </f:facet>
+                            <p:headerRow field="codigo"
+                                         expandable="true" expanded="false">
+
+                                <p:column colspan="6">
+                                    <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
+                                        <h:outputText styleClass="p-ml-2" value="#{libro.codigo} #{libro.nombre}"/>
+                                    </div>
+                                </p:column>
+
+                                <p:column>
+                                    <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
+                                        <h:outputText styleClass="p-ml-2" value="#{libroManagedBean.calculateSaldoCuenta(libro.codigo)}"/>
+                                    </div>
+                                </p:column>
+                            </p:headerRow>
+
+                            <p:column headerText="Cuenta">
+                                <h:outputText value="#{libro.codigo}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha" responsivePriority="4">
+                                <h:outputText value="#{libro.fecha}"/>
+                            </p:column>
+
+                            <p:column headerText="Asiento" responsivePriority="2">
+                                <h:outputText value="#{libro.asiento}"/>
+                            </p:column>
+
+                            <p:column headerText="Descripción" responsivePriority="3" exportable="false">
+                                <h:outputText value="#{libro.descripcion}" />
+                            </p:column>
+                            <p:column headerText="Debe">
+                                <h:outputText value="#{libro.debe}" />
+                            </p:column>
+                            <p:column headerText="Haber">
+                                <h:outputText value="#{libro.haber}" />
+                            </p:column>
+                            <p:column headerText="Saldo">
+                                <h:outputText value="#{libro.saldo}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                        <h4>Saldo total</h4>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12" style="margin-left: 2%">
+                                        <h:outputText value="#{libroManagedBean.totalSaldoDebe}"></h:outputText>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12" style="margin-left: 2%">
+                                        <h:outputText value="#{libroManagedBean.totalSaldoHaber}"></h:outputText>
+                                    </div>
+                                    <div class="col-md-1 col-sm-12" style="margin-left: 2%">
+                                        <h:outputText value="#{libroManagedBean.saldoTotal}"></h:outputText>
+                                    </div>
+                                </div>
+                            </f:facet>
+                        </p:dataTable>
+                    </div>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

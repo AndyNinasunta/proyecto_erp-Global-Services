@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <p:card>
+                    <f:facet name="title">
+                        SubCuenta
+                    </f:facet>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true"/>
+
+                        <p:dialog modal="true" draggable="false" id="dialog-form-grupo"
+                                  header="Grupo" widgetVar="dialogFormGrupo"
+                                  responsive="true" width="45%" closeOnEscape="true">
+                            <p:staticMessage rendered="#{grupoMB.action eq 'create'}"
+                                             severity="warn" summary="Atención" 
+                                             detail="Una vez registrada un grupo solo se puede modificar el nombre" 
+                                             style="width: 100%; margin-bottom: 3%;"/>
+                            <div class="ui-fluid" >
+                                <div class="p-field">
+                                    <p:outputLabel for="@next" value="Código: *"/>
+                                    <p:inputText value="#{planCuentas.intoGrupo.codigo}"
+                                                 readonly="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="@next" value="Nombre *"/>
+                                    <p:inputText value="#{planCuentas.intoGrupo.nombre}"
+                                                 />
+                                </div>
+                            </div>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" 
+                                                 icon="pi pi-check" 
+                                                 styleClass="ui-button-success"
+                                                 update="messages, grupo"
+                                                 rendered="#{grupoMB.action eq 'create'}" 
+                                                 action="#{planCuentas.registrarGrupo()}" />
+                                <p:commandButton type="button" value="Cancelar" 
+                                                 icon="pi pi-times" 
+                                                 styleClass="ui-button-danger p-mr-2"
+                                                 onclick="PF('dialogFormGrupo').hide()" />
+                            </f:facet>
+                        </p:dialog>
+
+                        <p:dialog modal="true" draggable="false" id="dialog-form-subgrupo"
+                                  header="SubGrupo" widgetVar="dialogFormSubGrupo"
+                                  responsive="true" width="45%" closeOnEscape="true">
+                            <p:staticMessage rendered="#{grupoMB.action eq 'create'}"
+                                             severity="warn" summary="Atención" 
+                                             detail="Una vez registrada un subgrupo solo se puede modificar el nombre" 
+                                             style="width: 100%; margin-bottom: 3%;"/>
+                            <div class="ui-fluid p-formgrid p-grid" >
+                                <div class="p-field p-col-12">
+                                    <p:outputLabel for="@next" value="Codigo: *"/>
+                                    <p:inputText value="#{planCuentas.intoSubgrupo.codigo}"
+                                                 readonly="true"/>
+                                </div>
+                                <div class="p-field p-col-12">
+                                    <p:outputLabel for="@next" value="Grupo: *"/>
+                                    <p:inputText value="#{planCuentas.grupo.codigo.trim()} - #{planCuentas.grupo.nombre.trim()}"
+                                                 readonly="true"/>
+                                </div>
+                                <div class="p-field p-col-12">
+                                    <p:outputLabel for="@next" value="Nombre: *"/>
+                                    <p:inputText value="#{planCuentas.intoSubgrupo.nombre}" />
+                                </div>
+                            </div>
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" 
+                                                 icon="pi pi-check" 
+                                                 styleClass="ui-button-success"
+                                                 update="messages, subgrupo"
+                                                 rendered="#{grupoMB.action eq 'create'}" 
+                                                 action="#{planCuentas.registrarSubGrupo()}" />
+                                <p:commandButton type="button" value="Cancelar" 
+                                                 icon="pi pi-times" 
+                                                 styleClass="ui-button-danger p-mr-2"
+                                                 onclick="PF('dialogFormSubGrupo').hide()" />
+                            </f:facet>
+                        </p:dialog>
+
+                        <p:dialog modal="true" draggable="false" id="dialog-form-cuenta"
+                                  header="Cuenta" widgetVar="dialogFormCuenta"
+                                  responsive="true" width="45%" closeOnEscape="true">
+                            <div class="ui-fluid" >
+                                <div class="p-field">
+                                    <p:outputLabel for="@next" value="Codigo: *"/>
+                                    <p:inputText value="#{planCuentas.intoCuenta.codigo}"
+                                                 readonly="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="@next" value="SubGrupo *"/>
+                                    <p:inputText value="#{planCuentas.subGrupo.codigo.trim()} - #{planCuentas.subGrupo.nombre.trim()}"
+                                                 readonly="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="@next" value="Nombre: *"/>
+                                    <p:inputText value="#{planCuentas.intoCuenta.nombre}" />
+                                </div>
+                            </div>
+                            <f:facet name="footer">
+                                <p:commandButton value="Guardar" 
+                                                 icon="pi pi-check" 
+                                                 styleClass="ui-button-success"
+                                                 update="messages, cuentas"
+                                                 rendered="#{grupoMB.action eq 'create'}" 
+                                                 action="#{planCuentas.registrarCuenta()}" />
+                                <p:commandButton type="button" value="Cancelar" 
+                                                 icon="pi pi-times" 
+                                                 styleClass="ui-button-danger p-mr-2"
+                                                 onclick="PF('dialogFormCuenta').hide()" />
+                            </f:facet>
+                        </p:dialog>
+
+                        <div class="ui-fluid p-formgrid p-grid">
+                            <p:staticMessage severity="warn" summary="Atención" 
+                                             detail="Una vez registrada una subcuenta solo se puede modificar el nombre" 
+                                             style="width: 100%; margin-bottom: 3%;"/>
+                            <div class="p-field p-md-4 p-col-12">
+                                <p:outputLabel for="@next" value="Código:"/>
+                                <p:inputText id="codigo" 
+                                             value="#{planCuentas.codigo}" 
+                                             readonly="true" />
+                            </div>
+
+                            <div class="p-field p-md-4 p-col-12">
+                                <p:outputLabel for="@next" value="Grupo: *"/>
+                                <div class="ui-inputgroup">
+                                    <p:inputText rendered="#{planCuentas.action eq 'update'}" value="#{planCuentas.onSeletedGrupo}"
+                                                 disabled="true" />
+                                    <p:selectOneMenu id="grupo" 
+                                                     value="#{planCuentas.onSeletedGrupo}"
+                                                     filter="true"
+                                                     rendered="#{planCuentas.action eq 'create'}"
+                                                     >
+                                        <p:ajax listener="#{planCuentas.onGrupoChange}"
+                                                update="codigo, subgrupo, cuentas" />
+                                        <f:selectItem itemLabel="Selecciona grupo" 
+                                                      itemValue="0"
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{planCuentas.grupos}" 
+                                                       var="grupo"
+                                                       itemLabel="#{grupo.nombre}" 
+                                                       itemValue="#{grupo.codigo}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton styleClass="ui-button-success"
+                                                     icon="pi pi-plus"
+                                                     action="#{planCuentas.formAgregarGrupo()}"
+                                                     update="messages, dialog-form-grupo"
+                                                     rendered="#{planCuentas.action eq 'create'}">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+
+                            <div class="p-field p-md-4 p-col-12">
+                                <p:outputLabel for="@next" value="SubGrupo: *"/>
+                                <div class="ui-inputgroup">
+                                    <p:inputText rendered="#{planCuentas.action eq 'update'}" value="#{planCuentas.onSeletedSubgrupo}"
+                                                 disabled="true" />
+                                    <p:selectOneMenu id="subgrupo" 
+                                                     value="#{planCuentas.onSeletedSubgrupo}" 
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{planCuentas.action eq 'create'}">
+                                        <p:ajax listener="#{planCuentas.onSubGrupoChange}" 
+                                                update="codigo, cuentas" />
+                                        <f:selectItem itemLabel="Selecciona subgrupo" 
+                                                      itemValue="0" 
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{planCuentas.subgrupos}" 
+                                                       var="subgrupo"
+                                                       itemLabel="#{subgrupo.nombre}" 
+                                                       itemValue="#{subgrupo.id}"/> <!-- codigo -->
+                                    </p:selectOneMenu>
+                                    <p:commandButton styleClass="ui-button-success"
+                                                     icon="pi pi-plus"
+                                                     action="#{planCuentas.formAgregarSubGrupo()}"
+                                                     update="messages, dialog-form-subgrupo"
+                                                     rendered="#{planCuentas.action eq 'create'}">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+
+                            <div class="p-field p-md-4 p-col-12">
+                                <p:outputLabel for="@next" value="Cuentas: *"/>
+                                <div class="ui-inputgroup">
+                                    <p:inputText rendered="#{planCuentas.action eq 'update'}" value="#{planCuentas.onSeletedCuenta}"
+                                                 disabled="true" />
+                                    <p:selectOneMenu id="cuentas"
+                                                     value="#{planCuentas.onSeletedCuenta}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{planCuentas.action eq 'create'}">
+                                        <p:ajax listener="#{planCuentas.onCuentaChange}" 
+                                                update="codigo" />
+                                        <f:selectItem itemLabel="Selecciona cuenta" 
+                                                      itemValue="0"
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{planCuentas.cuentas}" 
+                                                       var="cuenta"
+                                                       itemLabel="#{cuenta.nombre}" 
+                                                       itemValue="#{cuenta.idcuenta}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton styleClass="ui-button-success"
+                                                     icon="pi pi-plus"
+                                                     action="#{planCuentas.formAgregarCuenta()}"
+                                                     update="messages, dialog-form-cuenta"
+                                                     rendered="#{planCuentas.action eq 'create'}">
+                                    </p:commandButton>
+                                </div>
+                            </div>
+
+                            <div class="p-field p-md-4 p-col-12">
+                                <p:outputLabel for="@next" value="SubCuenta: *"/>
+                                <p:inputText value="#{planCuentas.subCuenta.nombre}"/>
+                            </div>
+
+                            <div class="p-field p-col-12">
+                                <p:selectOneRadio id="saldo" layout="pageDirection" 
+                                                  columns="1" 
+                                                  value="#{planCuentas.subCuenta.tipo}"
+                                                  rendered="#{planCuentas.action eq 'create'}">
+                                    <f:selectItem itemLabel="Saldo Deudor" 
+                                                  itemValue="Deudor"/>
+                                    <f:selectItem itemLabel="Saldo Acreedor" 
+                                                  itemValue="Acreedor"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+
+                        <p:commandButton value="Guardar" icon="pi pi-check" 
+                                         styleClass="ui-button-success" 
+                                         action="#{planCuentas.registrarSubCuenta()}"
+                                         update="@form" rendered="#{planCuentas.action eq 'create'}"/>
+                        <p:commandButton value="Actualizar" icon="pi pi-check" 
+                                         styleClass="ui-button-success" 
+                                         action="#{planCuentas.actualizarSubCuenta()}"
+                                         update="@form" rendered="#{planCuentas.action eq 'update'}"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" 
+                                         styleClass="ui-button-danger ml-2"
+                                         action="planCuentas" />
+                    </h:form>
+                </p:card>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

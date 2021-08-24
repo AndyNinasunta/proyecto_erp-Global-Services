@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">  
+    <h:body>
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+            <ui:define name="content">
+                <h:form class="p-p-3" id="form">
+
+                    <p:growl id="messages" showDetail="true"/>
+
+                    <div class="p-d-flex p-jc-between p-ai-center">
+
+                        <p class="titulo">Anticipos</p>
+
+                        <p:commandButton value="Nuevo" icon="pi pi-plus" 
+                                         actionListener="#{anticipoMB.open_new}"
+                                         update=":form:manage-anticipo-content"
+                                         oncomplete="PF('manageAnticipoDialog').show()"
+                                         styleClass="ui-button-raised ui-button-success" >
+
+                            <p:resetInput target=":form:manage-anticipo-content"/>
+
+                        </p:commandButton>
+                    </div>
+
+                    <p:dataTable 
+                        class="p-mt-3" 
+                        id="dt_anticipos" 
+                        reflow="true"
+                        size="small"
+                        value="#{anticipoMB.anticipos}" 
+                        rowKey="#{anticipo.id_anticipo}" 
+                        var="anticipo">
+
+                        <f:facet name="header">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                <span style="font-weight: bold">Anticipos</span>
+
+                                <span class="filter-container ui-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <p:inputText id="globalFilter" placeholder="Buscar"/>
+                                </span>
+
+                            </div>
+                        </f:facet>
+
+
+
+                        <p:column headerText="Fecha Registro" sortBy="#{anticipo.fecha}">
+                            <h:outputText value="#{anticipoMB.FormatoFecha(anticipo.fecha)}"/>
+                        </p:column>
+
+                        <p:column headerText="ID" sortBy="#{anticipo.id_anticipo}">
+                            <h:outputText value="#{anticipo.id_anticipo.substring(0, 5)}"/>
+                        </p:column>
+
+                        <p:column headerText="Descripción" sortBy="#{anticipo.descripcion}">
+                            <h:outputText value="#{anticipo.descripcion}"/>
+                        </p:column>
+
+                        <p:column headerText="Importe" sortBy="#{anticipo.importe}">
+                            <h:outputText value="#{anticipo.importe}"/>
+                        </p:column>
+
+                        <p:column headerText="Proveedor" sortBy="#{anticipo.proveedor.nombre}">
+                            <h:outputText value="#{anticipo.proveedor.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="Ruc" sortBy="#{anticipo.proveedor.ruc}">
+                            <h:outputText value="#{anticipo.proveedor.ruc}"/>
+                        </p:column>
+
+                        <p:column exportable="false">
+
+                            <!-- Boton de editar -->
+                            <p:commandButton 
+                                icon="pi pi-pencil" 
+                                oncomplete="PF('manageAnticipoDialog').show()"
+                                styleClass="edit-button rounded-button ui-button-warning" actionListener="#{anticipoMB.setSelected_anticipo(anticipo)}"
+                                update=":form:manage-anticipo-content">
+
+                                <p:resetInput target=":form:manage-anticipo-content"/>
+                            </p:commandButton>
+
+                            <!-- Boton de desabilitar -->
+                            <p:commandButton 
+                                icon="pi pi-trash" process="@this" 
+                                oncomplete="PF('delete_anticipo_dialog').show()"
+                                styleClass="ui-button-danger rounded-button" 
+                                update=":form:delete_dialog">
+                                
+                                <f:setPropertyActionListener value="#{anticipo}" target="#{anticipoMB.selected_anticipo}"/>
+                            </p:commandButton>
+
+                        </p:column>
+                    </p:dataTable>
+
+                    <!-- Dialogo para registrar un nuevo anticipo -->
+
+                    <p:dialog 
+                        class="p-m-3" 
+                        header="Anticipo" 
+                        showEffect="fade" 
+                        modal="true" 
+                        responsive="true" 
+                        widgetVar="manageAnticipoDialog">
+
+                        <p:outputPanel 
+                            id="manage-anticipo-content" 
+                            class="ui-fluid">
+                            <!-- Los campos del anticipo -->
+                            <p:outputPanel 
+                                rendered="#{not empty anticipoMB.selected_anticipo}">
+
+                                <div class="p-field p-d-none">
+                                    <p:outputLabel for="id_anticipo" >ID anticipo</p:outputLabel>
+                                    <p:inputText 
+                                        id="id_anticipo" type="input"
+                                        value="#{anticipoMB.selected_anticipo.id_anticipo}" />
+                                </div>
+
+                                <div class="p-formgrid p-grid">
+                                    <div class="p-field p-col-12 p-md-12 p-lg-6">
+                                        <p:outputLabel for="id_proveedor" >Proveedor</p:outputLabel>
+                                        <div class="ui-inputgroup">
+                                            <p:commandButton value="Buscar" id="buscar"/>
+                                            <p:inputText 
+                                                id="id_proveedor" 
+                                                type="input" readonly="true"
+                                                value="#{anticipoMB.selected_anticipo.id_proveedor}" 
+                                                required="true" />
+                                        </div>
+
+                                    </div>
+                                    <div class="p-field p-col-12 p-md-12 p-lg-6">
+                                        <p:outputLabel for="nombre_proveedor" >Nombre Proveedor</p:outputLabel>
+                                        <p:inputText 
+                                            id="nombre_proveedor" 
+                                            type="input" readonly="true"
+                                            value="#{anticipoMB.selected_anticipo.proveedor.nombre}" 
+                                            required="true" />
+                                    </div>
+                                </div>
+
+
+                                <div class="p-formgrid p-grid">
+                                    <div class="p-field p-col-12 p-md-12 p-lg-6">
+                                        <p:outputLabel for="importe" >Importe</p:outputLabel>
+                                        <p:inputNumber 
+                                            id="importe" 
+                                            value="#{anticipoMB.selected_anticipo.importe}" 
+                                            required="true" />
+                                    </div>
+
+                                    <div class="p-field p-col-12 p-md-12 p-lg-6">
+                                        <p:outputLabel 
+                                            for="fechaRegistro" >Fecha</p:outputLabel>
+                                        <p:datePicker 
+                                            id="fechaRegistro" 
+                                            value="#{anticipoMB.selected_anticipo.fecha}" 
+                                            required="true" />
+                                    </div>
+                                </div>
+                                
+                                <div class="p-field">
+                                    <p:outputLabel 
+                                        for="descripcion" >Descripción</p:outputLabel>
+                                    <p:inputTextarea 
+                                        id="descripcion" 
+                                        value="#{anticipoMB.selected_anticipo.descripcion}" />
+                                </div>
+
+                                <!-- dialogo busqueda de proveedor-->
+                                <p:overlayPanel for="buscar" dynamic="true" style="width:600px" widgetVar="selecionProveedor">
+                                    <p:dataTable var="pro" 
+                                                 value="#{anticipoMB.list_proveedor}" selectionMode="single" paginator="true"
+                                                 selection="#{anticipoMB.selected_Proveedor}"
+                                                 rowKey="#{pro.idProveedor}">
+
+                                        <p:ajax event="rowSelect" listener="#{anticipoMB.onRowSelect}" 
+                                                onsuccess="PF('selecionProveedor').hide()" update=":form:manage-anticipo-content"/>
+
+                                        <p:column headerText="Codigo">
+                                            <h:outputText value="#{pro.codigo}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Proveedor">
+                                            <h:outputText value="#{pro.nombre}"/>
+                                        </p:column>
+
+                                        <p:column headerText="RUC">
+                                            <h:outputText value="#{pro.ruc}"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </p:overlayPanel>
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <!-- Botones de guardar y cancelar -->
+                        <f:facet name="footer" >
+                            <div class="p-d-flex p-ai-center p-jc-end p-pt-3">
+                                <p:commandButton 
+                                    value="Guardar" 
+                                    update="manage-anticipo-content" 
+                                    process="manage-anticipo-content @this"
+                                    actionListener="#{anticipoMB.guardar_anticipo()}"/>
+
+                                <p:commandButton 
+                                    value="Cancelar" 
+                                    icon="pi pi-times" 
+                                    onclick="PF('manageAnticipoDialog').hide()"
+                                    class="ui-button-secondary"/>
+                            </div>
+
+                        </f:facet>
+
+                    </p:dialog>
+
+                    <!-- Dialogo de confirmación para eliminar el registro(anticipo) -->
+                    <p:dialog id="delete_dialog" width="400px"
+                              modal="true" 
+                              widgetVar="delete_anticipo_dialog" 
+                              showEffect="fade" 
+                              responsive="true"
+                              header="Confirmar" >
+
+                        <p class="p-text-center p-mb-3">¿Desea dehabilitar el anticipo?</p>
+
+                        <p>#{anticipoMB.selected_anticipo.id_anticipo}</p>
+
+
+
+                        <f:facet name="footer">
+                            <p:commandButton 
+                                value="Si" process="@this" 
+                                icon="pi pi-check"
+                                styleClass="ui-button-raised ui-button-success"
+                                actionListener="#{anticipoMB.delete()}" 
+                                oncomplete="PF('delete_anticipo_dialog').hide()" />
+
+                            <p:commandButton 
+                                value="No" 
+                                type="button" 
+                                styleClass="ui-button-secondary" 
+                                icon="pi pi-times"
+                                onclick="PF('delete_anticipo_dialog').hide()"/>
+                        </f:facet>
+                    </p:dialog>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="../../Plantilla/Plantilla.xhtml">
+
+            <ui:define name="content">
+                <div class="titleView">
+                    <h4>CARTERA POR EDADES DE VENCIMIENTO</h4>
+                </div>
+                <p:panel id="all">
+                    <h:form id="formCarteraVencida">
+                        <p:dataTable id="tblCarteraVencimiento" 
+                                     var="varCarteraVencimiento"
+                                     widgetVar="carteraVencimiento"
+                                     value="#{cartera_X_EdadesController.lista_Cartera_X_Edades}"
+                                     reflow="true"
+                                     rowKey="#{varCarteraVencimiento.idCliente}"
+                                     scrollable="true" paginator="true" 
+                                     rows="5" rowSelectMode="add"
+                                     paginatorPosition="bottom"  
+                                     emptyMessage="No existen Registros."  
+                                     style="font-size: 14px;">
+                            
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Fecha Emision">
+                                <h:outputText value="#{varCarteraVencimiento.fechaEmision}" />
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Documento">
+                                <h:outputText value="#{varCarteraVencimiento.numFactura}" />
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Cliente">
+                                <h:outputText value="#{varCarteraVencimiento.nombreClientes}" />
+                            </p:column>
+                            <p:column headerText="Dias de Credito"
+                                      style="text-align: center; width: 100px;">
+                                <h:outputText value="#{varCarteraVencimiento.diasDeCredito}" />
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Fecha de Vencimiento">
+                                <h:outputText value="#{varCarteraVencimiento.fechaVencimiento}" />
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Valor a Cobrar">
+                                <h:outputText value="#{varCarteraVencimiento.valorTotalDoc}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Dias Vencidos">
+                                <h:outputText value="#{varCarteraVencimiento.diasMora}" />
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Por Vencer">
+                                <h:outputText value="#{varCarteraVencimiento.valorACobrar}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;" 
+                                      headerText="Vencido 1 a 30 dias">
+                                <h:outputText value="#{varCarteraVencimiento.vencido30Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;"
+                                      headerText="Vencido 31 a 60 dias">
+                                <h:outputText value="#{varCarteraVencimiento.vencido60Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;"
+                                      headerText="Vencido mayor a 60 dias">
+                                <h:outputText value="#{varCarteraVencimiento.vencidoMas60Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                    <br/>
+                    <h:form>
+                        <p:dataTable id="tblCarteraVencimientoTotal" 
+                                     var="varCarteraVencimientoTotal"
+                                     emptyMessage="No existen Registros."  
+                                     value="#{cartera_X_EdadesController.listaSum_Cartera_X_Edades}"
+                                     style="font-size: 14px;">
+
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Total Valor a Cobrar">
+                                <h:outputText value="#{varCarteraVencimientoTotal.valorTotalDoc}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="tamanoInput" style="text-align: center;"
+                                      headerText="Total por Vencer">
+                                <h:outputText value="#{varCarteraVencimientoTotal.valorACobrar}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;" 
+                                      headerText="Total Vencido 1 a 30 días">
+                                <h:outputText value="#{varCarteraVencimientoTotal.vencido30Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;"
+                                      headerText="Total Vencido 31 a 60 días">
+                                <h:outputText value="#{varCarteraVencimientoTotal.vencido60Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column class="diasVencidos" style="text-align: center;"
+                                      headerText="Total Vencido mayor a 60 días">
+                                <h:outputText value="#{varCarteraVencimientoTotal.vencidoMas60Dias}">
+                                    <f:convertNumber type="currency" 
+                                                     currencySymbol="$"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <div class="alinearBotones">  
+                            <p:commandButton id="btnExcel" ajax="false" 
+                                             value="EXCEL" icon="pi pi-file-excel"
+                                             style="background: green;">
+                                <p:dataExporter type="xls" 
+                                                target=":formCarteraVencida:tblCarteraVencimiento"
+                                                fileName="CarteraDeVencimiento"
+                                                options="#{cartera_X_EdadesController.excelOpt}"/>
+                            </p:commandButton>
+                            &nbsp;
+                            <p:commandButton id="btnPdf" ajax="false" 
+                                             value="PDF" icon="pi pi-file-pdf"
+                                             style="background: red;">
+                                <p:dataExporter type="pdf" 
+                                                target=":formCarteraVencida:tblCarteraVencimiento"
+                                                fileName="CarteraDeVencimiento"
+                                                options="#{cartera_X_EdadesController.pdfOpt}"/>
+                            </p:commandButton>
+                        </div>
+                    </h:form>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
