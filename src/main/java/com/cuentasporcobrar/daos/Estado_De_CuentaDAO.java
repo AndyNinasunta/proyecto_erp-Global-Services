@@ -52,13 +52,14 @@ public class Estado_De_CuentaDAO implements Serializable {
                 String sentencia = "select*from obtener_estado_cuenta_general()";
                 result = conex.ejecutarConsulta(sentencia);
                 
-                //Instanciamos la clase AbonoDAO.        
-                AbonoDAO abonoDAO= new AbonoDAO();
+                 //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
                 
                 while (result.next()) {
                     
                      //Concatenamos la sucursal, el punto de emision y el numero de la factura
-                    String numFact =abonoDAO.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
+                    String numFact =port.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
                             result.getInt("puntoemision_r"), result.getInt("secuencia_r"));
                     
                     
@@ -106,14 +107,15 @@ public class Estado_De_CuentaDAO implements Serializable {
                 String sentencia = "select*from obtener_estado_cuenta_cliente("+idCliente+")";
                 result = conex.ejecutarConsulta(sentencia);
                 
-                 //Instanciamos la clase AbonoDAO.        
-                AbonoDAO abonoDAO= new AbonoDAO();
+                 //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
                 
                 while (result.next()) {
                     
                     
                      //Concatenamos la sucursal, el punto de emision y el numero de la factura
-                    String numFact =abonoDAO.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
+                    String numFact =port.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
                             result.getInt("puntoemision_r"), result.getInt("secuencia_r"));
                     
                     lista_Estado_de_Cuenta.add(new Estado_De_Cuenta(

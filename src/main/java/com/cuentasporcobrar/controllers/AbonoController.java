@@ -1,4 +1,3 @@
-
 package com.cuentasporcobrar.controllers;
 
 import com.cuentasporcobrar.daos.AbonoDAO;
@@ -16,7 +15,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.xml.ws.WebServiceRef;
 import org.primefaces.PrimeFaces;
+import servicios.ServicioCxC_Service;
 
 @Named(value = "abonoController")
 @ViewScoped
@@ -165,11 +166,16 @@ public class AbonoController implements Serializable {
                 this.retencionDAO = new RetencionDAO();
                 idCliente = persona.getIdCliente();
 
+                //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
+
                 //Cargamos las ventas en el select one
                 List<Retencion> r = retencionDAO.obtenerVentas(persona.getIdCliente());
                 for (Retencion lret : r) {
 
-                    String numFactura = abonoDAO.obtenerConcatenacionFactura(
+                    //Guardando en el String la concatenación.
+                    String numFactura = port.obtenerConcatenacionFactura(
                             lret.getIdSucursal(), lret.getPuntoEmision(),
                             lret.getSecuencia());
 
@@ -283,4 +289,3 @@ public class AbonoController implements Serializable {
     }
 
 }
-

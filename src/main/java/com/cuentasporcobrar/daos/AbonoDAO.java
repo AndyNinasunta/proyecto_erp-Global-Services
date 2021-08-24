@@ -45,12 +45,17 @@ public class AbonoDAO implements Serializable {
                 de un plan de pago correspondiente */
                 String sentencia = "Select*from obtener_abonos_de_plan_de_pago(" + idVenta + ")";
                 result = conex.ejecutarConsulta(sentencia);
+                
+                //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
 
                 //Recorremos la TABLA retornada y la almacenamos en la lista.
                 while (result.next()) {
 
                     //Concatenamos la sucursal, el punto de emision y el numero de la factura
-                    String numFact = obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
+                     //Guardando en el String la concatenación.
+                    String numFact = port.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
                             result.getInt("puntoemision_r"), result.getInt("secuencia_r"));
 
                     listaAbonos.add(new Abono(result.getInt("idabono_r"),
@@ -79,27 +84,6 @@ public class AbonoDAO implements Serializable {
             }
         }
         return listaAbonos;
-    }
-
-    //Funcion que devuelve un String con la concatenacion de la factura
-    public String obtenerConcatenacionFactura(int sucursal, int pntEmision, int secuencia) {
-        String numSucursal = "000", numEmision = "000", numSecuencia = "000000000";
-        int longitud = 0;
-
-        //Controlando la surcursal
-        longitud = String.valueOf(sucursal).length();
-        numSucursal = numSucursal.substring(0, (numSucursal.length()) - longitud) + String.valueOf(sucursal);
-
-        //Controlando punto de emision
-        longitud = String.valueOf(pntEmision).length();
-        numEmision = numEmision.substring(0, (numEmision.length()) - longitud) + String.valueOf(pntEmision);
-
-        //Controlando secuencia de la factura
-        longitud = String.valueOf(secuencia).length();
-        numSecuencia = numSecuencia.substring(0, (numSecuencia.length()) - longitud) + String.valueOf(secuencia);
-
-        return numSucursal + "-" + numEmision + "-" + numSecuencia;
-
     }
 
     /*Procedimiento para insertar un nuevo abono.

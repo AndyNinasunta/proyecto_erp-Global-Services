@@ -91,7 +91,7 @@ public class RetencionController implements Serializable {
         return listaVenta;
     }
     //Fin
-    
+
     //Metodo que nos carga las facturas de un determinado cliente.
     public void cargarFacturas() {
         try {
@@ -111,15 +111,16 @@ public class RetencionController implements Serializable {
                 this.retencionDAO = new RetencionDAO();
                 idCliente = persona.getIdCliente();
 
-                //Instanciamos la clase AbonoDAO para usar un metodo
-                AbonoDAO abonoDAO = new AbonoDAO();
+                //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
 
                 //Cargamos las ventas en el select one
                 List<Retencion> r = retencionDAO.obtenerVentas(persona.getIdCliente());
                 for (Retencion lret : r) {
 
-                    //Usamos la funcion de Abono Dao para concatenar la factura
-                    String numFactura = abonoDAO.obtenerConcatenacionFactura(
+                    //Guardando en el String la concatenación.
+                    String numFactura = port.obtenerConcatenacionFactura(
                             lret.getIdSucursal(), lret.getPuntoEmision(),
                             lret.getSecuencia());
 

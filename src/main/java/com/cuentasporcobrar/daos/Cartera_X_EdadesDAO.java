@@ -48,14 +48,15 @@ public class Cartera_X_EdadesDAO implements Serializable {
                 String sentencia = "select*from obtener_cartera_vencidaxedades()";
                 result = conex.ejecutarConsulta(sentencia);
 
-                 //Instanciamos la clase AbonoDAO.        
-                AbonoDAO abonoDAO= new AbonoDAO();
+                //Instanciamos al servicio
+                servicios.ServicioCxC_Service service = new servicios.ServicioCxC_Service();
+                servicios.ServicioCxC port = service.getServicioCxCPort();
                 
                 //Recorremos la TABLA retornada y la almacenamos en la lista.
                 while (result.next()) {
 
                     //Concatenamos la sucursal, el punto de emision y el numero de la factura
-                    String numFact =abonoDAO.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
+                    String numFact =port.obtenerConcatenacionFactura(result.getInt("id_sucursal_r"),
                             result.getInt("puntoemision_r"), result.getInt("secuencia_r"));
                     
                     lista_CarteraxEdades.add(new Cartera_X_Edades(
