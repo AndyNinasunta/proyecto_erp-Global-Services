@@ -18,7 +18,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.xml.ws.WebServiceRef;
 import org.primefaces.PrimeFaces;
+import servicios.ServicioValidaIdentCliente_Service;
 
 @Named(value = "personaController")
 @ViewScoped
@@ -52,13 +54,13 @@ public class PersonaController implements Serializable {
         persona_Juridica = new Persona_Juridica();
         persona_Natural = new Persona_Natural();
 
-        try{
-           
-        listaCliente = new ArrayList<>();
-        //Esta linea de código nos obtiene todos los clientes.
-        //@return Retorna una lista, la cual será cargada en la tabla clientes.
-        listaCliente = personaDAO.obtenerTodosLosClientes();
-        
+        try {
+
+            listaCliente = new ArrayList<>();
+            //Esta linea de código nos obtiene todos los clientes.
+            //@return Retorna una lista, la cual será cargada en la tabla clientes.
+            listaCliente = personaDAO.obtenerTodosLosClientes();
+
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -66,8 +68,8 @@ public class PersonaController implements Serializable {
     }
 
     public void mostrar() {
-        try{
-        listaCliente = personaDAO.obtenerTodosLosClientes();
+        try {
+            listaCliente = personaDAO.obtenerTodosLosClientes();
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -107,7 +109,7 @@ public class PersonaController implements Serializable {
         this.persona_Juridica = persona_Juridica;
     }
     //Fin
-    
+
     public void cargarClientes(Persona per) {
         try {
             this.persona = per;
@@ -168,13 +170,41 @@ public class PersonaController implements Serializable {
 
     public void registrarClienteJuridico() {
         try {
+            //Instanciamos una lista auxiliar donde se guardaran las
+            //identificaciones de los clientes registrados en la BD.
+            ArrayList listaIdentifaciones = new ArrayList();
+            
+            //Intanciamos el servicio 
+            servicios.ServicioValidaIdentCliente_Service service = 
+                    new servicios.ServicioValidaIdentCliente_Service();
+            servicios.ServicioValidaIdentCliente port = 
+                    service.getServicioValidaIdentClientePort();
+
             persona_JuridicaDAO = new Persona_JuridicaDAO(persona_Juridica);
-            if (persona_JuridicaDAO.insertarClienteJuridico() > 0) {
-                mostrarMensajeInformacion("Se Registró Correctamente");
-                this.listaCliente = personaDAO.obtenerTodosLosClientes();
+            
+            //Recorremos la lista auxiliar para llenar los datos de las identi-
+            //ficaciones
+            for (Persona lst : personaDAO.obtenerTodosLosClientes()) {
+                listaIdentifaciones.add(lst.getIdentificacion());
+                System.out.println("Identificacion: " + lst.getIdentificacion());
+            }
+
+            //Se guarda en una variable boolean para conocer lo que me retorna 
+            //el servicio.
+            java.lang.Boolean result = port.validaIdentCliente(
+                    persona_Juridica.getIdentificacion(), listaIdentifaciones);
+            System.out.println(result);
+
+            if (!result) {
+                if (persona_JuridicaDAO.insertarClienteJuridico() > 0) {
+                    mostrarMensajeInformacion("Se Registró Correctamente");
+                    this.listaCliente = personaDAO.obtenerTodosLosClientes();
+                } else {
+                    System.out.println("No se Ingresó el Cliente Juridico.");
+                    mostrarMensajeError("No se Registró Correctamente");
+                }
             } else {
-                System.out.println("No se Ingresó el Cliente Juridico.");
-                mostrarMensajeError("No se Registró Correctamente");
+                    mostrarMensajeError("Esa Identificación ya existe.");
             }
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
@@ -190,13 +220,40 @@ public class PersonaController implements Serializable {
 
     public void registrarClienteNatural() {
         try {
+            //Instanciamos una lista auxiliar donde se guardaran las
+            //identificaciones de los clientes registrados en la BD.
+            ArrayList listaIdentifaciones = new ArrayList();
+            
+            //Intanciamos el servicio 
+            servicios.ServicioValidaIdentCliente_Service service = 
+                    new servicios.ServicioValidaIdentCliente_Service();
+            servicios.ServicioValidaIdentCliente port = 
+                    service.getServicioValidaIdentClientePort();
+
             persona_NaturalDAO = new Persona_NaturalDAO(persona_Natural);
-            if (persona_NaturalDAO.insertarClienteNatural() > 0) {
-                mostrarMensajeInformacion("Se Registró Correctamente");
-                this.listaCliente = personaDAO.obtenerTodosLosClientes();
+
+            //Recorremos la lista auxiliar para llenar los datos de las identi-
+            //ficaciones
+            for (Persona lst : personaDAO.obtenerTodosLosClientes()) {
+                listaIdentifaciones.add(lst.getIdentificacion());
+                System.out.println("Identificacion: " + lst.getIdentificacion());
+            }
+
+            //Se guarda en una variable boolean para conocer lo que me retorna 
+            //el servicio.
+            java.lang.Boolean result = port.validaIdentCliente(persona_Juridica.getIdentificacion(), listaIdentifaciones);
+            System.out.println(result);
+
+            if (!result) {
+                if (persona_NaturalDAO.insertarClienteNatural() > 0) {
+                    mostrarMensajeInformacion("Se Registró Correctamente");
+                    this.listaCliente = personaDAO.obtenerTodosLosClientes();
+                } else {
+                    System.out.println("No se Ingresó el Cliente Natural.");
+                    mostrarMensajeError("No se Registró Correctamente");
+                }
             } else {
-                System.out.println("No se Ingresó el Cliente Natural.");
-                mostrarMensajeError("No se Registró Correctamente");
+                mostrarMensajeError("Esa Identificación ya existe.");
             }
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
@@ -204,7 +261,7 @@ public class PersonaController implements Serializable {
         PrimeFaces.current().executeScript("PF('clienteNaturalNew').hide()");
         PrimeFaces.current().executeScript("location.reload()");
     }
-    
+
     //Actualizar Objeto de Nuevo Cliente Natural
     public void nuevoClienteN() {
         this.persona_Natural = new Persona_Natural();
@@ -212,46 +269,46 @@ public class PersonaController implements Serializable {
 
     //Al momento de darle click al icono de editar, se ejecuta este procedi.
     public void obtenerUnClienteJuridico(int idClienteJ) {
-        try{
-          
-        //Se almacena el id cliente en una variable auxiliar
-        int aux = idClienteJ;
-        persona_JuridicaDAO = new Persona_JuridicaDAO(persona_Juridica);
-        //Se obtiene ese cliente por el id
-        Persona_Juridica per_juridica = persona_JuridicaDAO.obtenerClienteJuridico(idClienteJ);
+        try {
 
-        //Se remplazan los objetos
-        persona_Juridica = per_juridica;
-        //Ubicamos nuevamente el id de la variable auxiliar
-        persona_Juridica.setIdCliente(aux);
-        //Se instancia nuevamente la personaJuridicaDAO pero con todos los 
-        //datos recopilados
-        persona_JuridicaDAO = new Persona_JuridicaDAO(persona_Juridica);
-        
-        }catch (Exception ex) {
+            //Se almacena el id cliente en una variable auxiliar
+            int aux = idClienteJ;
+            persona_JuridicaDAO = new Persona_JuridicaDAO(persona_Juridica);
+            //Se obtiene ese cliente por el id
+            Persona_Juridica per_juridica = persona_JuridicaDAO.obtenerClienteJuridico(idClienteJ);
+
+            //Se remplazan los objetos
+            persona_Juridica = per_juridica;
+            //Ubicamos nuevamente el id de la variable auxiliar
+            persona_Juridica.setIdCliente(aux);
+            //Se instancia nuevamente la personaJuridicaDAO pero con todos los 
+            //datos recopilados
+            persona_JuridicaDAO = new Persona_JuridicaDAO(persona_Juridica);
+
+        } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
-        }    
+        }
     }
 
     public void obtenerUnClienteNatural(int idClienteN) {
-        try{
-        //Se almacena el id cliente en una variable auxiliar
-        int aux = idClienteN;
-        persona_NaturalDAO = new Persona_NaturalDAO(persona_Natural);
+        try {
+            //Se almacena el id cliente en una variable auxiliar
+            int aux = idClienteN;
+            persona_NaturalDAO = new Persona_NaturalDAO(persona_Natural);
 
-        //Se obtiene ese cliente por el id
-        Persona_Natural per_Natural = persona_NaturalDAO.obtenerClienteNatural(idClienteN);
+            //Se obtiene ese cliente por el id
+            Persona_Natural per_Natural = persona_NaturalDAO.obtenerClienteNatural(idClienteN);
 
-        //Se remplazan los objetos
-        persona_Natural = per_Natural;
+            //Se remplazan los objetos
+            persona_Natural = per_Natural;
 
-        //Ubicamos nuevamente el id de la variable auxiliar
-        persona_Natural.setIdCliente(aux);
+            //Ubicamos nuevamente el id de la variable auxiliar
+            persona_Natural.setIdCliente(aux);
 
-        //Se instancia nuevamente la personaJuridicaDAO pero con todos los 
-        //datos recopilados
-        persona_NaturalDAO = new Persona_NaturalDAO(persona_Natural);
-        }catch (Exception ex) {
+            //Se instancia nuevamente la personaJuridicaDAO pero con todos los 
+            //datos recopilados
+            persona_NaturalDAO = new Persona_NaturalDAO(persona_Natural);
+        } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }
